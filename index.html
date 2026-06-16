@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherOS | Official Custom ROM Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff5a00;
+            --primary-grad: linear-gradient(90deg, #ff3300, #ff7b00);
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --text-main: #ffffff;
+            --text-sub: #b3b3b3;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Inter',sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body{
+            background: var(--bg);
+            color: var(--text-main);
+            overflow-x:hidden;
+        }
+
+        body::before{
+            content:'';
+            position:fixed;
+            width:750px;
+            height:750px;
+            background:radial-gradient(circle, var(--primary) 0%,transparent 70%);
+            filter:blur(150px);
+            top:-250px;
+            left:-200px;
+            opacity:.3;
+            z-index:-1;
+        }
+
+        body::after{
+            content:'';
+            position:fixed;
+            width:600px;
+            height:600px;
+            background:radial-gradient(circle, #ff0055 0%,transparent 70%);
+            filter:blur(160px);
+            bottom:-200px;
+            right:-200px;
+            opacity:.2;
+            z-index:-1;
+        }
+
+        nav{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px 10%;
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.75);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo{
+            font-size:1.6rem;
+            font-weight:800;
+            background: var(--primary-grad);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        nav ul{
+            display:flex;
+            list-style:none;
+            gap:35px;
+        }
+
+        nav a{
+            color: var(--text-main);
+            text-decoration:none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition:.3s;
+        }
+
+        nav a:hover{
+            color: var(--primary);
+        }
+
+        .hero{
+            min-height:90vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            padding:20px;
+            position: relative;
+        }
+
+        .hero h1{
+            font-size: 5.5rem;
+            font-weight:800;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #ffffff 30%, #ff5a00 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            margin-bottom: 10px;
+        }
+
+        .hero p{
+            margin-top:15px;
+            font-size:1.4rem;
+            color: var(--text-sub);
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        .buttons{
+            margin-top:45px;
+            display:flex;
+            gap:20px;
+            flex-wrap:wrap;
+            justify-content:center;
+        }
+
+        .btn{
+            padding:16px 32px;
+            border-radius:14px;
+            text-decoration:none;
+            font-weight:600;
+            font-size: 1rem;
+            transition:.3s;
+        }
+
+        .primary{
+            background: var(--primary-grad);
+            color:white;
+        }
+
+        .secondary{
+            border:1px solid rgba(255,255,255,.15);
+            color:white;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover{
+            transform:translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255, 90, 0, 0.25);
+        }
+
+        .secondary:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            width: 80%;
+            margin: -30px auto 80px auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-box {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-box h3 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-box p {
+            color: #777;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        section {
+            padding: 90px 10%;
+        }
+
+        .section-title{
+            text-align:center;
+            font-size:2.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom:10px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Заменили Philosophy на Our Vision */
+        .vision-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .vision-p {
+            font-size: 1.25rem;
+            color: #ccc;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .cards-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+            gap:30px;
+        }
+
+        .feature-card{
+            background: var(--card-bg);
+            border:1px solid var(--card-border);
+            backdrop-filter:blur(20px);
+            border-radius:24px;
+            padding:35px;
+            transition:.3s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(255, 90, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-card h3{
+            margin-bottom:15px;
+            color: var(--primary);
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-sub);
+            line-height: 1.6;
+            font-size: 0.98rem;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .screen-placeholder {
+            aspect-ratio: 9 / 19;
+            background: linear-gradient(180deg, rgba(255,90,0,0.05) 0%, rgba(0,0,0,0.8) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: .4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-placeholder:hover {
+            border-color: var(--primary);
+            transform: scale(1.03);
+            color: var(--primary);
+            box-shadow: 0 10px 30px rgba(255,90,0,0.1);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .faq-header {
+            padding: 22px 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: .3s;
+        }
+
+        .faq-header:hover {
+            background: rgba(255,255,255,0.02);
+            color: var(--primary);
+        }
+
+        .faq-icon {
+            transition: transform 0.3s;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            color: var(--text-sub);
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+
+        .faq-body-content {
+            padding: 0 30px 25px 30px;
+        }
+
+        .faq-body ol {
+            padding-left: 20px;
+        }
+
+        .faq-body li {
+            margin-bottom: 8px;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        footer {
+            background: #020202;
+            padding: 60px 10% 30px 10%;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h4 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .footer-brand p {
+            color: #555;
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .disclaimer-box {
+            max-width: 500px;
+            background: rgba(255,0,0,0.02);
+            border: 1px solid rgba(255,0,0,0.05);
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .disclaimer-box h5 {
+            color: #ff4444;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .disclaimer-box p {
+            color: #666;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.02);
+            color: #444;
+            font-size: 0.85rem;
+        }
+
+        @media(max-width:768px){
+            .hero h1{ font-size:3.2rem; }
+            nav{ flex-direction:column; gap:20px; padding: 20px; }
+            nav ul { gap: 20px; }
+            .footer-content { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#" class="logo-area">
+        <div class="logo">AetherOS</div>
+    </a>
+    <ul>
+        <li><a href="#vision">Our Vision</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#screenshots">Showcase</a></li>
+        <li><a href="devices.html">Devices</a></li> <!-- Ведет на новую страницу -->
+        <li><a href="#faq">Guide</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <h1>AetherOS Project</h1>
+    <p>Built for speed. Cleaned from bloat. Optimized to the absolute limits.</p>
+    <div class="buttons">
+        <a href="devices.html" class="btn primary">Get Downloads</a> <!-- Кнопка перекидывает на девайсы -->
+        <a href="#vision" class="btn secondary">Learn More</a>
+    </div>
+</section>
+
+<div class="stats-container">
+    <div class="stat-box">
+        <h3>2</h3>
+        <p>Supported Devices</p>
+    </div>
+    <div class="stat-box">
+        <h3>100%</h3>
+        <p>De-bloated Code</p>
+    </div>
+    <div class="stat-box">
+        <h3>OTA</h3>
+        <p>Stable Base</p>
+    </div>
+</div>
+
+<!-- Секция НАШЕ ВИДЕНИЕ взамен Philosophy -->
+<section class="vision-section" id="vision">
+    <h2 class="section-title" style="color: #ff6a00;">Our Vision</h2>
+    <div class="section-subtitle">Redefining what your smartphone is capable of</div>
+    <p class="about-p">We believe that the hardware you bought belongs completely to you, not to corporate tracking algorithms or heavy vendor frameworks. AetherOS was born with a clear mission: to dismantle artificial performance limits and strip away stock software boundaries. We inject lightweight low-level code architecture to deliver a blazing fast Android experience, putting raw hardware potential and clean aesthetics back into the palms of our users.</p>
+</section>
+
+<section class="features" id="features">
+    <h2 class="section-title">Core Features</h2>
+    <div class="section-subtitle">Every line of code is explicitly compiled for performance</div>
+    
+    <div class="cards-grid">
+        <div class="feature-card">
+            <h3>Kernel Optimization</h3>
+            <p>Low-level tweaks to the task scheduler and custom-tuned thermal profiles. Your device will sustain maximum clocks without thermal throttling during intense gaming sessions.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Smooth UI Engine</h3>
+            <p>Absolutely zero stutters or dropped frames when dropping the notification shade or swapping apps. Interface rendering is completely tied to your screen's high refresh rate.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Advanced Battery Care</h3>
+            <p>Enhanced transition logic for deep sleep (Doze mode) once the display locks down. Background services are aggressively audited to prevent unnecessary battery drainage.</p>
+        </div>
+    </div>
+</section>
+
+<section id="screenshots">
+    <h2 class="section-title">System UI Showcase</h2>
+    <div class="section-subtitle">A minimal interface with absolutely zero bloatware</div>
+    
+    <div class="screenshot-grid">
+        <div class="screen-placeholder">Quick Settings Placer</div>
+        <div class="screen-placeholder">Home Screen Placer</div>
+        <div class="screen-placeholder">Settings Menu Placer</div>
+        <div class="screen-placeholder">Aether Lab Tweaks</div>
+    </div>
+</section>
+
+<section id="faq">
+    <h2 class="section-title">Installation & FAQ</h2>
+    <div class="section-subtitle">A straightforward guide to getting AetherOS running on your phone</div>
+
+    <div class="faq-container">
+        <div class="faq-item">
+            <div class="faq-header">Expand Clean Flash Installation Instructions <span class="faq-icon">+</span></div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    <ol>
+                        <li>Ensure your device's Bootloader is fully unlocked.</li>
+                        <li>Download the matching stable ROM zip package for your specific codename from our <a href="devices.html" style="color: var(--primary);">Devices Page</a>.</li>
+                        <li>Reboot your phone into your custom recovery of choice (OrangeFox / PitchBlack / TWRP).</li>
+                        <li>Navigate to the Wipe menu and execute: <b>Format Data by typing "yes"</b>.</li>
+                        <li>Transfer the downloaded ROM zip file onto your storage via MTP or OTG, then flash the zip.</li>
+                        <li>Once the installation successfully logs completion, hit Reboot System. Initial boot cycles can take up to 5 minutes.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-header">Are Google Apps (GApps) pre-included? <span class="faq-icon">+</span></div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    This depends entirely on the build variant for your specific device tree. Check the build labels or read the tags next to the build download button to see if it's a Vanilla (no GApps) or a GApps-included package. Updates are posted regularly on our Telegram channel.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-header">How do I update to newer builds (Dirty Flash)? <span class="faq-icon">+</span></div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    To upgrade without wiping your personal storage, download the fresh package update, boot directly into custom recovery, flash the zip archive over your active system partition, and reboot right away. Formatting data is not required for standard inline upgrades.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-brand">
+            <h4>AetherOS Project</h4>
+            <p>Official release hub and asset engine for the AetherOS aftermarket firmware.</p>
+            <p style="margin-top: 10px; color: #ff5a00;">Lead Developer: LineXin</p>
+        </div>
+        
+        <div class="disclaimer-box">
+            <h5>Disclaimer & Limitation of Liability</h5>
+            <p>Your warranty is now void. Flashing custom software changes system-level assets. You are executing all modifications, recovery runs, and script installations entirely at your own risk. The AetherOS core project and its device maintainers take no responsibility for bricked devices, dead storage chips, or missed alarms due to software errors. Know your tooling before flashing!</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 AetherOS Project. Crafted with a strict focus on clean code and design.
+    </div>
+</footer>
+
+<script>
+    const faqHeaders = document.querySelectorAll('.faq-header');
+    faqHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const item = header.parentElement;
+            const body = header.nextElementSibling;
+            item.classList.toggle('active');
+            if (item.classList.contains('active')) {
+                body.style.maxHeight = body.scrollHeight + "px";
+            } else {
+                body.style.maxHeight = "0px";
+            }
+        });
+    });
+</script>
+</body>
+</html>

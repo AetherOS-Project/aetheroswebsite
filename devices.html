@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supported Devices | AetherOS Downloads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff5a00;
+            --primary-grad: linear-gradient(90deg, #ff3300, #ff7b00);
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --text-main: #ffffff;
+            --text-sub: #b3b3b3;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Inter',sans-serif;
+        }
+
+        body{
+            background: var(--bg);
+            color: var(--text-main);
+            overflow-x:hidden;
+        }
+
+        body::before{
+            content:'';
+            position:fixed;
+            width:750px;
+            height:750px;
+            background:radial-gradient(circle, var(--primary) 0%,transparent 70%);
+            filter:blur(150px);
+            top:-250px;
+            left:-200px;
+            opacity:.15;
+            z-index:-1;
+        }
+
+        nav{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px 10%;
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.75);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo{
+            font-size:1.6rem;
+            font-weight:800;
+            background: var(--primary-grad);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        nav ul{
+            display:flex;
+            list-style:none;
+            gap:35px;
+        }
+
+        nav a{
+            color: var(--text-main);
+            text-decoration:none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition:.3s;
+        }
+
+        nav a:hover, nav a.active{
+            color: var(--primary);
+        }
+
+        .downloads-section {
+            padding: 80px 10%;
+            min-height: 80vh;
+        }
+
+        .section-title{
+            text-align:center;
+            font-size:3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom:10px;
+            margin-top: 20px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto 50px auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 18px 28px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: .3s;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 25px rgba(255, 90, 0, 0.2);
+        }
+
+        .download-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 26px;
+            padding: 35px;
+            margin-bottom: 30px;
+            transition: .3s;
+        }
+
+        .download-card:hover {
+            border-color: rgba(255, 90, 0, 0.4);
+            box-shadow: 0 15px 40px rgba(255, 90, 0, 0.06);
+        }
+
+        .download-card h2 {
+            font-size: 1.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .download-card h2 span:first-child {
+            background: linear-gradient(90deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .device-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .device-info div {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .device-info strong {
+            display: block;
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .device-info span {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            background: var(--primary-grad);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 14px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: .3s;
+            font-size: 0.95rem;
+        }
+
+        .dl-rom {
+            background: var(--primary-grad);
+            color: white;
+        }
+
+        .dl-sub {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+
+        .dl-sub:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .no-results {
+            text-align: center;
+            color: #555;
+            padding: 60px;
+            font-size: 1.2rem;
+            display: none;
+            background: rgba(255,255,255,0.01);
+            border-radius: 24px;
+            border: 1px dashed rgba(255,255,255,0.06);
+        }
+
+        footer {
+            background: #020202;
+            padding: 40px 10% 30px 10%;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: #444;
+            font-size: 0.85rem;
+        }
+
+        @media(max-width:768px){
+            .section-title { font-size: 2.2rem; }
+            nav{ flex-direction:column; gap:20px; padding: 20px; }
+            nav ul { gap: 20px; }
+            .action-buttons { flex-direction: column; }
+            .btn-sm { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="logo-area">
+        <div class="logo">AetherOS</div>
+    </a>
+    <ul>
+        <li><a href="index.html#vision">Our Vision</a></li>
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#screenshots">Showcase</a></li>
+        <li><a href="#" class="active">Devices</a></li>
+        <li><a href="index.html#faq">Guide</a></li>
+    </ul>
+</nav>
+
+<section class="downloads-section">
+    <h1 class="section-title">Supported Devices</h1>
+    <p class="section-subtitle">Find official builds compiled specifically for your smartphone</p>
+
+    <div class="search-container">
+        <input type="text" id="mainSearch" class="search-bar" placeholder="Search by model or codename (e.g., merlinx, blossom)..." autofocus>
+    </div>
+
+    <div id="downloadsContainer">
+
+        <!-- Device 1 -->
+        <div class="download-card target-device">
+            <h2>
+                <span>Redmi Note 9</span>
+                <span class="badge">Official</span>
+            </h2>
+            <div class="device-info">
+                <div>
+                    <strong>Codename</strong>
+                    <span>merlinx</span>
+                </div>
+                <div>
+                    <strong>Android Version</strong>
+                    <span>16 QPR2</span>
+                </div>
+                <div>
+                    <strong>Base ROM</strong>
+                    <span>Evolution X</span>
+                </div>
+                <div>
+                    <strong>Build Version</strong>
+                    <span>v1.0-STABLE</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-sm dl-rom">Download ROM</a>
+                <a href="#" class="btn-sm dl-sub">Changelog</a>
+                <a href="#" class="btn-sm dl-sub">Source Code</a>
+            </div>
+        </div>
+
+        <!-- Device 2 -->
+        <div class="download-card target-device">
+            <h2>
+                <span>Redmi 9C NFC</span>
+                <span class="badge">Official</span>
+            </h2>
+            <div class="device-info">
+                <div>
+                    <strong>Codename</strong>
+                    <span>blossom</span>
+                </div>
+                <div>
+                    <strong>Android Version</strong>
+                    <span>14</span>
+                </div>
+                <div>
+                    <strong>Base ROM</strong>
+                    <span>crDroid</span>
+                </div>
+                <div>
+                    <strong>Build Version</strong>
+                    <span>v1.0-STABLE</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-sm dl-rom">Download ROM</a>
+                <a href="#" class="btn-sm dl-sub">Changelog</a>
+                <a href="#" class="btn-sm dl-sub">Source Code</a>
+            </div>
+        </div>
+
+        <div id="emptySearch" class="no-results">This codename is not supported yet... Feel free to bring up a port! 🛠️</div>
+
+    </div>
+</section>
+
+<footer>
+    <div class="footer-bottom">
+        &copy; 2026 AetherOS Project • Official Download Repository
+    </div>
+</footer>
+
+<script>
+    document.getElementById('mainSearch').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.target-device');
+        let foundAny = false;
+
+        cards.forEach(card => {
+            const content = card.textContent.toLowerCase();
+            if (content.includes(query)) {
+                card.style.display = 'block';
+                foundAny = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        const errorMsg = document.getElementById('emptySearch');
+        if (foundAny) {
+            errorMsg.style.display = 'none';
+        } else {
+            errorMsg.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
