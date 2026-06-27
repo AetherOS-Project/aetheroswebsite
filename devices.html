@@ -217,22 +217,32 @@
             font-weight: 600;
             transition: .3s;
             font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            outline: none;
         }
 
         .dl-rom {
             background: var(--primary-grad);
             color: white;
         }
+        
+        .dl-rom:hover {
+            box-shadow: 0 0 20px rgba(255, 90, 0, 0.4);
+            transform: translateY(-2px);
+        }
 
         .dl-sub {
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #ccc;
+            background: transparent;
         }
 
         .dl-sub:hover {
             background: rgba(255, 255, 255, 0.04);
             color: #fff;
             border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
 
         .no-results {
@@ -244,6 +254,162 @@
             background: rgba(255,255,255,0.01);
             border-radius: 24px;
             border: 1px dashed rgba(255,255,255,0.06);
+        }
+
+        /* --- Фирменная Модалка в стиле AetherOS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 2, 2, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-window {
+            background: #0a0a0a;
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 580px;
+            padding: 40px;
+            position: relative;
+            transform: scale(0.95) translateY(10px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 50px rgba(255, 90, 0, 0.03);
+        }
+
+        .modal-overlay.active .modal-window {
+            transform: scale(1) translateY(0);
+            border-color: rgba(255, 90, 0, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-sub);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .2s;
+        }
+
+        .close-btn:hover {
+            background: var(--primary-grad);
+            color: white;
+            border-color: transparent;
+        }
+
+        .modal-window h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #fff, #bbb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-meta {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+
+        /* Вкладки модального окна */
+        .modal-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: .2s;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            background: rgba(255, 90, 0, 0.1);
+            color: var(--primary);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Контент вкладок */
+        .changelog-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 220px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .dl-modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .dl-modal-buttons .btn-sm {
+            flex: 1;
+            text-align: center;
         }
 
         footer {
@@ -264,6 +430,7 @@
             nav ul { gap: 20px; }
             .action-buttons { flex-direction: column; }
             .btn-sm { text-align: center; }
+            .dl-modal-buttons { flex-direction: column; }
         }
     </style>
 </head>
@@ -292,10 +459,9 @@
 
     <div id="downloadsContainer">
 
-        <!-- Device 1 -->
         <div class="download-card target-device">
             <h2>
-                <span>Redmi Note 9</span>
+                <span>Redmi Note 9 / 9C</span>
                 <span class="badge">Official</span>
             </h2>
             <div class="device-info">
@@ -317,13 +483,12 @@
                 </div>
             </div>
             <div class="action-buttons">
-                <a href="#" class="btn-sm dl-rom">Download ROM</a>
-                <a href="#" class="btn-sm dl-sub">Changelog</a>
-                <a href="#" class="btn-sm dl-sub">Source Code</a>
+                <button class="btn-sm dl-rom" onclick="openModal('merlinx', 'downloads')">Download ROM</button>
+                <button class="btn-sm dl-sub" onclick="openModal('merlinx', 'changelog')">Changelog</button>
+                <a href="https://github.com/AetherOS-Project/device_xiaomi_merlinx" target="_blank" class="btn-sm dl-sub">Source Code</a>
             </div>
         </div>
 
-        <!-- Device 2 -->
         <div class="download-card target-device">
             <h2>
                 <span>Redmi 9C NFC</span>
@@ -348,9 +513,129 @@
                 </div>
             </div>
             <div class="action-buttons">
-                <a href="#" class="btn-sm dl-rom">Download ROM</a>
-                <a href="#" class="btn-sm dl-sub">Changelog</a>
-                <a href="#" class="btn-sm dl-sub">Source Code</a>
+                <button class="btn-sm dl-rom" onclick="openModal('blossom', 'downloads')">Download ROM</button>
+                <button class="btn-sm dl-sub" onclick="openModal('blossom', 'changelog')">Changelog</button>
+                <a href="https://github.com/AetherOS-Project" target="_blank" class="btn-sm dl-sub">Source Code</a>
+            </div>
+        </div>
+
+        <div class="download-card target-device">
+            <h2>
+                <span>Redmi Note 13 Pro 4G</span>
+                <span class="badge">Official</span>
+            </h2>
+            <div class="device-info">
+                <div>
+                    <strong>Codename</strong>
+                    <span>emerald</span>
+                </div>
+                <div>
+                    <strong>Android Version</strong>
+                    <span>16</span>
+                </div>
+                <div>
+                    <strong>Base ROM</strong>
+                    <span>AOSP</span>
+                </div>
+                <div>
+                    <strong>Build Version</strong>
+                    <span>v1.0-BETA</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-sm dl-rom" onclick="openModal('emerald', 'downloads')">Download ROM</button>
+                <button class="btn-sm dl-sub" onclick="openModal('emerald', 'changelog')">Changelog</button>
+                <a href="https://github.com/AetherOS-Project/android_device_xiaomi_emerald" target="_blank" class="btn-sm dl-sub">Source Code</a>
+            </div>
+        </div>
+
+        <div class="download-card target-device">
+            <h2>
+                <span>Redmi 10C</span>
+                <span class="badge">Official</span>
+            </h2>
+            <div class="device-info">
+                <div>
+                    <strong>Codename</strong>
+                    <span>fog</span>
+                </div>
+                <div>
+                    <strong>Android Version</strong>
+                    <span>16</span>
+                </div>
+                <div>
+                    <strong>Base ROM</strong>
+                    <span>AOSP</span>
+                </div>
+                <div>
+                    <strong>Build Version</strong>
+                    <span>v1.0-STABLE</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-sm dl-rom" onclick="openModal('fog', 'downloads')">Download ROM</button>
+                <button class="btn-sm dl-sub" onclick="openModal('fog', 'changelog')">Changelog</button>
+                <a href="https://github.com/AetherOS-Project/device_xiaomi_fog" target="_blank" class="btn-sm dl-sub">Source Code</a>
+            </div>
+        </div>
+
+        <div class="download-card target-device">
+            <h2>
+                <span>Redmi Note 6 Pro</span>
+                <span class="badge">Official</span>
+            </h2>
+            <div class="device-info">
+                <div>
+                    <strong>Codename</strong>
+                    <span>tulip</span>
+                </div>
+                <div>
+                    <strong>Android Version</strong>
+                    <span>16</span>
+                </div>
+                <div>
+                    <strong>Base ROM</strong>
+                    <span>AOSP</span>
+                </div>
+                <div>
+                    <strong>Build Version</strong>
+                    <span>v1.0-STABLE</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-sm dl-rom" onclick="openModal('tulip', 'downloads')">Download ROM</button>
+                <button class="btn-sm dl-sub" onclick="openModal('tulip', 'changelog')">Changelog</button>
+                <a href="https://github.com/AetherOS-Project/android_device_xiaomi_tulip" target="_blank" class="btn-sm dl-sub">Source Code</a>
+            </div>
+        </div>
+
+        <div class="download-card target-device">
+            <h2>
+                <span>Galaxy A32 4G</span>
+                <span class="badge">Official</span>
+            </h2>
+            <div class="device-info">
+                <div>
+                    <strong>Codename</strong>
+                    <span>a32</span>
+                </div>
+                <div>
+                    <strong>Android Version</strong>
+                    <span>16</span>
+                </div>
+                <div>
+                    <strong>Base ROM</strong>
+                    <span>AOSP</span>
+                </div>
+                <div>
+                    <strong>Build Version</strong>
+                    <span>v1.0-BETA</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-sm dl-rom" onclick="openModal('a32', 'downloads')">Download ROM</button>
+                <button class="btn-sm dl-sub" onclick="openModal('a32', 'changelog')">Changelog</button>
+                <a href="https://github.com/AetherOS-Project/android_device_samsung_a32" target="_blank" class="btn-sm dl-sub">Source Code</a>
             </div>
         </div>
 
@@ -359,6 +644,33 @@
     </div>
 </section>
 
+<div class="modal-overlay" id="aetherModal" onclick="closeModal(event)">
+    <div class="modal-window">
+        <button class="close-btn" onclick="closeModal(event, true)">&times;</button>
+        <h2 id="modalTitle">Device Name</h2>
+        <div class="modal-meta" id="modalMeta">codename: xxx</div>
+
+        <div class="modal-tabs">
+            <button class="tab-btn active" id="tabBtn-downloads" onclick="switchTab('downloads')">Downloads</button>
+            <button class="tab-btn" id="tabBtn-changelog" onclick="switchTab('changelog')">Changelog</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-downloads">
+            <p style="color: var(--text-sub); margin-bottom: 20px; font-size: 0.95rem;">Select your preferred builds package variant:</p>
+            <div class="dl-modal-buttons">
+                <a href="#" id="link-vanilla" target="_blank" class="btn-sm dl-sub" style="text-align: center;">VANILLA BUILD</a>
+                <a href="#" id="link-gapps" target="_blank" class="btn-sm dl-rom" style="text-align: center;">GAPPS BUILD</a>
+            </div>
+        </div>
+
+        <div class="tab-panel" id="panel-changelog">
+            <div class="changelog-box" id="changelogContent">
+                • Loading changes...
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer>
     <div class="footer-bottom">
         &copy; 2026 AetherOS Project • Official Download Repository
@@ -366,6 +678,48 @@
 </footer>
 
 <script>
+    // База данных прошивок под твои репозитории
+    const deviceDb = {
+        merlinx: {
+            name: "Redmi Note 9 / 9C",
+            meta: "Codename: merlinx | Base: Evolution X",
+            changelog: "• Initial Beta release of AetherOS!\n• Core source updated to latest Android 16 QPR2.\n• Integrated AetherHub customizations package.\n• Improved UI responsiveness & memory management.",
+            vanilla: "https://sourceforge.net", // Замени на реальные линки, когда зальете билды
+            gapps: "https://sourceforge.net"
+        },
+        blossom: {
+            name: "Redmi 9C NFC",
+            meta: "Codename: blossom | Base: crDroid",
+            changelog: "• Stable build on top of crDroid baseline.\n• Security patch level updated.\n• Fixed Bluetooth audio streaming issues.\n• Battery backup optimizations for blossom devices.",
+            vanilla: "#", gapps: "#"
+        },
+        emerald: {
+            name: "Redmi Note 13 Pro 4G",
+            meta: "Codename: emerald | Base: AOSP",
+            changelog: "• First experimental compilation.\n• Fixed deep sleep state issue.\n• Added initial support for dual SIM calling.",
+            vanilla: "#", gapps: "#"
+        },
+        fog: {
+            name: "Redmi 10C",
+            meta: "Codename: fog | Base: AOSP",
+            changelog: "• Stable initial tree implementation.\n• Kernel optimization for Snapdragon 680.\n• Fingerprint scanner performance improved.",
+            vanilla: "#", gapps: "#"
+        },
+        tulip: {
+            name: "Redmi Note 6 Pro",
+            meta: "Codename: tulip | Base: AOSP",
+            changelog: "• Brought up legacy device on Android 16 base!\n• Extended battery lifetime.\n• Performance tweaks to keep UI fluid.",
+            vanilla: "#", gapps: "#"
+        },
+        a32: {
+            name: "Galaxy A32 4G",
+            meta: "Codename: a32 | Base: AOSP",
+            changelog: "• Beta compilation tracking mt6768 tree.\n• Implemented custom display color calibration.\n• Known issue: VoLTE might be unstable.",
+            vanilla: "#", gapps: "#"
+        }
+    };
+
+    // Логика поиска (твоя, полностью рабочая)
     document.getElementById('mainSearch').addEventListener('input', function(e) {
         const query = e.target.value.toLowerCase().trim();
         const cards = document.querySelectorAll('.target-device');
@@ -388,6 +742,40 @@
             errorMsg.style.display = 'block';
         }
     });
+
+    // Функция открытия модалки
+    function openModal(codename, targetTab) {
+        const data = deviceDb[codename];
+        if (!data) return;
+
+        document.getElementById('modalTitle').innerText = data.name;
+        document.getElementById('modalMeta').innerText = data.meta;
+        document.getElementById('changelogContent').innerText = data.changelog;
+        document.getElementById('link-vanilla').href = data.vanilla;
+        document.getElementById('link-gapps').href = data.gapps;
+
+        switchTab(targetTab);
+
+        document.getElementById('aetherModal').classList.add('active');
+        document.body.style.overflow = 'hidden'; // Запрещаем скролл фона
+    }
+
+    // Функция закрытия модалки
+    function closeModal(e, forceClose = false) {
+        if (forceClose || e.target.classList.contains('modal-overlay')) {
+            document.getElementById('aetherModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Переключение вкладок внутри модалки
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+        document.getElementById(`tabBtn-${tabName}`).classList.add('active');
+        document.getElementById(`panel-${tabName}`).classList.add('active');
+    }
 </script>
 
 </body>
